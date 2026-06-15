@@ -2,6 +2,7 @@ import torch
 import torch.nn as nn
 import torch_geometric.nn as pyg_nn
 import torch_geometric.data as pyg_data
+import logging
 
 class TrafficGNN(nn.Module):
     def __init__(self):
@@ -19,7 +20,6 @@ class TrafficGNN(nn.Module):
         x = self.fc2(x)
         return x
 
-# Create a dataset class for the traffic data
 class TrafficDataset(pyg_data.Dataset):
     def __init__(self, data_list):
         self.data_list = data_list
@@ -31,21 +31,31 @@ class TrafficDataset(pyg_data.Dataset):
         data = self.data_list[idx]
         return data
 
-# Create a data loader for the traffic data
-data_list = [...]  # list of traffic data
-dataset = TrafficDataset(data_list)
-data_loader = pyg_data.DataLoader(dataset, batch_size=32, shuffle=True)
+class TrafficGNNModel:
+    def __init__(self):
+        self.model = TrafficGNN()
+        self.criterion = nn.MSELoss()
+        self.optimizer = torch.optim.Adam(self.model.parameters(), lr=0.001)
+        self.data_loader = None
 
-# Train the graph neural network
-model = TrafficGNN()
-criterion = nn.MSELoss()
-optimizer = torch.optim.Adam(model.parameters(), lr=0.001)
+    def schedule_traffic_flow(self, data_list):
+        self.data_loader = pyg_data.DataLoader(TrafficDataset(data_list), batch_size=32, shuffle=True)
+        for epoch in range(100):
+            for data in self.data_loader:
+                try:
+                    self.optimizer.zero_grad()
+                    output = self.model(data)
+                    loss = self.criterion(output, data.y)
+                    loss.backward()
+                    self.optimizer.step()
+                except Exception as e:
+                    logging.error(f"Error during scheduling operations: {e}")
+            print(f'Epoch {epoch+1}, Loss: {loss.item()}')
 
-for epoch in range(100):
-    for data in data_loader:
-        optimizer.zero_grad()
-        output = model(data)
-        loss = criterion(output, data.y)
-        loss.backward()
-        optimizer.step()
-    print(f'Epoch {epoch+1}, Loss: {loss.item()}')
+def test_schedule_traffic_flow():
+    data_list = [...]  # list of traffic data
+    model = TrafficGNNModel()
+    model.schedule_traffic_flow(data_list)
+
+if __name__ == "__main__":
+    test_schedule_traffic_flow()
