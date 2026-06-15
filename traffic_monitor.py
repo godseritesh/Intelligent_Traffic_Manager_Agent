@@ -93,5 +93,27 @@ class TestTrafficMonitor(unittest.TestCase):
             mock.findContours.assert_called_once_with(mock.threshold.return_value, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
             mock.contourArea.assert_has_calls([mock.call(mock.findContours.return_value[0][0]), mock.call(mock.findContours.return_value[0][1])])
 
+    def test_monitor_traffic_with_no_frame_read(self):
+        mock_frame = Mock()
+        mock_frame.read.return_value = (False, None)
+        mock.VideoCapture.return_value = mock_frame
+
+        monitor = TrafficMonitor()
+        with patch('cv2.cvtColor') as mock.cvtColor, \
+             patch('cv2.threshold') as mock.threshold, \
+             patch('cv2.findContours') as mock.findContours, \
+             patch('cv2.contourArea') as mock.contourArea:
+            mock.cvtColor.return_value = cv2.cvtColor(mock_frame, cv2.COLOR_BGR2GRAY)
+            mock.threshold.return_value = (Mock(), Mock())
+            mock.findContours.return_value = ([], None)
+            mock.contourArea.return_value = 0
+
+            monitor.monitor_traffic()
+            mock.VideoCapture.assert_called_once_with('traffic_video.mp4')
+            mock.cvtColor.assert_not_called()
+            mock.threshold.assert_not_called()
+            mock.findContours.assert_not_called()
+            mock.contourArea.assert_not_called()
+
 if __name__ == '__main__':
     unittest.main()
