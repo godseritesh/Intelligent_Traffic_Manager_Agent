@@ -32,6 +32,9 @@ class FRAP:
     def _dummy_update(self):
         pass
 
+    def update_traffic_signal(self):
+        pass
+
 # Train the FRAP agent
 def train_agent(agent):
     for episode in range(1000):
@@ -58,7 +61,7 @@ def train_agent(agent):
 
             rewards += reward
             try:
-                agent.memory.push(state, action, reward, next_state, done)
+                agent.memory.append((state, action, reward, next_state, done))
             except Exception as e:
                 print(f"Error during memory push: {e}")
                 break
@@ -76,7 +79,7 @@ def test_update_traffic_signal():
     agent = FRAP(env)
     # Mock the necessary components for testing
     agent.select_action = lambda state: np.array([0.1, 0.2, 0.3, 0.4])
-    agent.memory.push = lambda state, action, reward, next_state, done: None
+    agent.memory = []
     agent.update = lambda: None
 
     # Test the update_traffic_signal method

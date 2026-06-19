@@ -21,8 +21,11 @@ class TrafficGNN(nn.Module):
         return x
 
 class TrafficDataset(pyg_data.Dataset):
-    def __init__(self, data_list):
+    def __init__(self, data_list, input_dir, output_dir, env_variables):
         self.data_list = data_list
+        self.input_dir = input_dir
+        self.output_dir = output_dir
+        self.env_variables = env_variables
 
     def __len__(self):
         return len(self.data_list)
@@ -38,8 +41,8 @@ class TrafficGNNModel:
         self.optimizer = torch.optim.Adam(self.model.parameters(), lr=0.001)
         self.data_loader = None
 
-    def schedule_traffic_flow(self, data_list):
-        self.data_loader = pyg_data.DataLoader(TrafficDataset(data_list), batch_size=32, shuffle=True)
+    def schedule_traffic_flow(self, data_list, input_dir, output_dir, env_variables):
+        self.data_loader = pyg_data.DataLoader(TrafficDataset(data_list, input_dir, output_dir, env_variables), batch_size=32, shuffle=True)
         for epoch in range(100):
             for data in self.data_loader:
                 try:
@@ -54,8 +57,11 @@ class TrafficGNNModel:
 
 def test_schedule_traffic_flow():
     data_list = [...]  # list of traffic data
+    input_dir = '/path/to/input/directory'
+    output_dir = '/path/to/output/directory'
+    env_variables = {...}  # dictionary of environment variables
     model = TrafficGNNModel()
-    model.schedule_traffic_flow(data_list)
+    model.schedule_traffic_flow(data_list, input_dir, output_dir, env_variables)
 
 if __name__ == "__main__":
     test_schedule_traffic_flow()

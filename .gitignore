@@ -1,0 +1,33 @@
+[config]
+env = /app/config/.env
+
+[keyvault]
+enabled = true 
+
+[security]
+min_required_version = "1.0.0"
+
+[migration]
+enabled = false
+
+[loggers]
+keyvault = {"handlers": ["console"], "level": "INFO"}
+[files]
+paths = /app/config/.env
+
+[security]
+password_hash = pbkdf2sha256
+```
+
+ 
+/.env
+# Environment variables for config
+
+KEYVAULT_URL=
+DB_HOST=
+DB_PORT=
+DB_USER=
+DB_PASSWORD=
+
+# Other variables here
+...
