@@ -90,6 +90,28 @@ The reinforcement learning agent optimizes traffic signal timings using the FRAP
 2. Install the required libraries: `pip install -r requirements.txt`
 3. Run the system: `python main.py`
 
+## Error Handling Guidelines
+----------------------------
+
+To ensure smooth operation and user experience, the following error handling guidelines should be followed in the development and production environments:
+
+1. **Input Validation**:
+   - Ensure that all inputs to the traffic monitoring system are valid. Invalid inputs should raise clear error messages indicating what is wrong.
+
+2. **Exception Handling**:
+   - Surround critical sections of code with try-except blocks to catch exceptions and prevent crashes. Log these exceptions for further analysis.
+   - Provide user-friendly messages when an error occurs, indicating that an operational issue has been encountered without exposing internal details.
+
+3. **Logging**:
+   - Implement logging throughout the system to capture runtime information and errors. This will aid in diagnosing issues in production.
+   - Ensure logs are saved with timestamps and relevant context to facilitate future debugging.
+
+4. **Graceful Degradation**:
+   - In scenarios where a component fails (e.g., traffic monitoring), the system should continue to operate using fallback mechanisms or default settings.
+
+5. **Performance Monitoring**:
+   - Continuously monitor system performance to identify anomalies or performance bottlenecks that could lead to failure.
+
 ## Results
 ----------
 
@@ -117,4 +139,3 @@ This project is licensed under the MIT License. See [LICENSE](LICENSE) for detai
 --------------
 
 * Ritesh Godse: Developed the traffic management system using graph neural networks and reinforcement learning.
-

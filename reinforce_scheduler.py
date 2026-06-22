@@ -37,3 +37,8 @@ for episode in range(1000):
         state = next_state
     agent.update()
     print(f'Episode {episode+1}, Reward: {rewards}')
+
+    # Error logging
+    if rewards < -10:  # Example condition for logging
+        with open('error_log.txt', 'a') as f:
+            f.write(f'Episode {episode+1}, Low Reward: {rewards}\n')
