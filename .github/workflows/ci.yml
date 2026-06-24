@@ -64,3 +64,15 @@ jobs:
                 });
               }
             }
+
+  unit_tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Run Unit Tests
+        run: |
+          echo "Running unit tests..."
+          # Replace this with the actual command to run your unit tests
+          # For example: python -m unittest discover -s tests
+          echo "No unit tests to run."
